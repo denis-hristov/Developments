@@ -1,0 +1,311 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Goods {
+public:
+    Goods() {};
+    virtual ~Goods() {};
+    virtual void print_info() = 0;
+    virtual double sum_price() = 0;
+protected:
+    string name;
+    double price;
+};
+
+class Clothes : public Goods {
+public:
+    Clothes(string nameClothes, double priceClothes,
+        string typeClothing, string sizeClothing) {
+        name = nameClothes; price = priceClothes;
+        type = typeClothing; size = sizeClothing;
+    };
+    ~Clothes() override {};
+
+    void print_info() override {
+        cout << "\nName: Clothes"
+            << "\nType: " << name
+            << "\nSize: " << size
+            << "\nPrice: " << price << endl;
+    };
+
+    double sum_price(){
+        return price;
+    };
+
+private:
+    string type;
+    string size;
+};
+
+class Jewelry : public Goods {
+public:
+    Jewelry(string nameJewelry, double priceJewelry,
+        string typeJewelry, string Gemstone) {
+        name = nameJewelry; price = priceJewelry;
+        type = typeJewelry; typeGemstone = Gemstone;
+    };
+    ~Jewelry() override {};
+
+    void print_info() override {
+        cout << "\nName: Jewelry"
+            << "\nType Jewelry: " << name
+            << "\nType Gemstone: " << typeGemstone
+            << "\nPrice: " << price << endl;
+    };
+
+    double sum_price(){
+        return price;
+    };
+
+private:
+    string type;
+    string typeGemstone;
+};
+
+class Shoes : public Goods {
+public:
+    Shoes(string nameShoes, double priceShoes,
+        string materialShoes, string sizeShoes) {
+        name = nameShoes; price = priceShoes;
+        material = materialShoes; size = sizeShoes;
+        
+    };
+    ~Shoes() override {};
+
+    void print_info() override {
+        cout << "\nName: Shoes"
+            << "\nMaterial: " << name
+            << "\nSize: " << size
+            << "\nPrice: " << price << endl;
+    };
+
+    double sum_price(){
+        return price;
+    };
+
+private:
+    string material, size;
+};
+
+class Queue {
+public:
+    Queue() {};
+    ~Queue() {};
+
+    void Add(Goods* obj) {
+        line.push_back(obj);
+    };
+
+    void orderSheet() {
+        if (line.empty()) {
+            cout << "\n_____________________________________\n";
+            cout << "Order sheet is empty.\n";
+            cout << "_____________________________________\n";
+        }
+        else {
+            cout << "\n_____________________________________\n";
+            cout << "\nOrder Sheet:\n";
+            cout << "_____________________________________\n";
+            for (int i = 0; i < line.size(); i++) {
+                line[i]->print_info();
+            }
+        }
+    };
+
+    double totalPrice() {
+        double total = 0;
+        for (Goods* item : line) {
+            total += item->sum_price();
+        }
+        return total;
+    }
+
+private:
+    vector<Goods*> line;
+};
+
+void homeMenu() {
+    cout << "\n\n*************************************\n";
+    cout << "_____________________________________\n";
+    cout << "*           Fashion house           *\n";
+    cout << "_____________________________________\n";
+    cout << "* Choices:                          *\n";
+    cout << "* (1) Clothes                       *\n";
+    cout << "* (2) Jewelry                       *\n";
+    cout << "* (3) Shoes                         *\n";
+    cout << "* (4) Order sheet                   *\n";
+    cout << "* (5) Buy                           *\n";
+    cout << "* (6) Exit                          *\n";
+    cout << "_____________________________________\n";
+    cout << "* Write: ";
+}
+
+void template1(vector<string>a) {
+    cout << "---------------------------\n";
+    for (int i = 0; i < a.size(); i++) {
+        cout << '(' << i + 1 << ") " << a[i] << endl;;
+    }
+    cout << "---------------------------\n";
+}
+
+string answor(string b, vector<string>a) {
+    return a[stoi(b)-1];
+}
+
+double priceSummingClothes(string name, string size) {
+    double basePrice = (name == "T-shirt" ? 20 :
+        (name == "Jeans" ? 30 :
+            (name == "Jacket" ? 50 : 0)));
+
+    double sizeAdjustment = (size == "XS" ? 0.05 :
+        (size == "S" ? 0.10 :
+            (size == "M" ? 0.15 :
+                (size == "L" ? 0.20 :
+                    (size == "XL" ? 0.25 : 0)))));
+
+    return basePrice * (1 + sizeAdjustment);
+}
+
+double priceSummingJewelry(string name, string gemstone) {
+    double basePrice = (name == "Necklace" ? 80 :
+        (name == "Bracelet" ? 110 :
+            (name == "Ring" ? 90 : 0)));
+
+    double sizeAdjustment = (gemstone == "Diamont" ? 2.3 :
+        (gemstone == "Ruby" ? 1.2 :
+            (gemstone == "Sapphire" ? 0.6 : 0)));
+
+    return basePrice * (1 + sizeAdjustment);
+}
+
+double priceSummingShoes(string name, string material, string size) {
+    double basePrice = (name == "Sneakers" ? 55 :
+        (name == "High heels" ? 70 :
+            (name == "Sandals" ? 30 : 0)));
+
+    double materialAdjustment = (size == "Lether" ? 0.5 :
+        (size == "Foam" ? 0.2 :
+            (size == "Textiles" ? 0.15 : 0)));
+
+    double sizeAdjustment = (size == "36" ? 0.06 :
+        (size == "37" ? 0.07 :
+            (size == "38" ? 0.08 :
+                (size == "39" ? 0.09 :
+                    (size == "40" ? 0.1 :
+                        (size == "41" ? 0.11 : 0))))));
+
+    return basePrice * (1 + sizeAdjustment + materialAdjustment);
+}
+
+int main() {
+    Queue queue;
+    vector<string>choose;
+
+    while (true) {
+        homeMenu();
+        string choice;
+        getline(cin, choice);
+
+        if (choice == "1") {
+            string name, type, size;
+            double price=0.0;
+
+            choose = { "T-shirt", "Jeans", "Jacket"};
+            template1(choose);
+            cout << "Enter clothing type: ";
+            getline(cin, name);
+            name = answor(name, choose);
+
+            choose = { "XS", "S", "M", "L", "XL"};
+            template1(choose);
+            cout << "Enter size: ";
+            getline(cin, size);
+            size = answor(size, choose);
+
+            price = priceSummingClothes(name, size);
+
+            queue.Add(new Clothes(name, price, type, size));
+            cout << endl;
+        }
+        else if (choice == "2") {
+            string name, type, gemstone;
+            double price = 0.0;
+
+            choose = { "Necklace", "Bracelet", "Ring"};
+            template1(choose);
+            cout << "Enter jewelry name: ";
+            getline(cin, name);
+            name = answor(name, choose);
+
+            choose = { "Diamont", "Ruby", "Sapphire" };
+            template1(choose);
+            cout << "Enter gemstone type: ";
+            getline(cin, gemstone);
+            gemstone = answor(gemstone, choose);
+
+            price = priceSummingJewelry(name, gemstone);
+
+            queue.Add(new Jewelry(name, price, type, gemstone));
+            cout << endl;
+        }
+        else if (choice == "3") {
+            string name, material, size;
+            double price = 0.0;
+
+            choose = { "Sneakers", "High heels", "Sandals" };
+            template1(choose);
+            cout << "Enter shoe name: ";
+            getline(cin, name);
+            name = answor(name, choose);
+
+            choose = { "Lether", "Foam", "Textiles" };
+            template1(choose);
+            cout << "Enter material: ";
+            getline(cin, material);
+            material = answor(material, choose);
+
+            choose = { "36", "37", "38", "39", "40", "41"};
+            template1(choose);
+            cout << "Enter size: ";
+            getline(cin, size);
+            size = answor(size, choose);
+
+            price = priceSummingShoes(name, material, size);
+
+            queue.Add(new Shoes(name, price, material, size));
+            cout << endl;
+        }
+        else if (choice == "4") {
+            queue.orderSheet();
+            cout << "_____________________________________\n";
+            cout << "\nTotal price: " << queue.totalPrice()
+                << " BGN\n";
+        }
+        else if (choice == "5") {
+            string pay;
+
+            cout << "Total price: " << queue.totalPrice()
+                << " BGN" << endl;
+            cout << "_____________________________________\n";
+            cout << "Pay:\nYes/No\n";
+
+            getline(cin, pay);
+
+            if (pay == "Yes" || pay == "yes") {
+                cout << "Thank you for your purchase!\n";
+                break;
+            }
+            else {
+                cout << "See you next time!\n";
+                break;
+            }
+        }
+        else if (choice == "6") {
+            cout << "Come back later!\n";
+            break;
+        }
+    }
+    return 0;
+}
